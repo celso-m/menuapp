@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import dishes from '../dummydata/dishes.json'
+
 const formPages = [
   {
     name: 'Page 1',
@@ -6,8 +8,9 @@ const formPages = [
       { type: 'text', name: 'input1' },
       {
         type: 'dropdown',
-        name: 'dropdown1',
-        options: ['Option 1', 'Option 2'],
+        name: 'meal',
+        options: ['breakfast', 'lunch', 'dinner'],
+        className: "mealDropDown"
       },
     ],
   },
@@ -33,11 +36,31 @@ const formPages = [
       },
     ],
   },
+  {
+    name: 'Page 4',
+    inputs: [
+      { type: 'text', name: 'input3' },
+      {
+        type: 'dropdown',
+        name: 'dropdown3',
+        options: ['Option 5', 'Option 6'],
+      },
+    ],
+  },
 ];
 
 export default function Multiform() {
   const [currentPage, setCurrentPage] = useState(0);
   const [inputValues, setInputValues] = useState<{[key: string]: string}>({});
+  const [dishList, setDishes] = useState({})
+
+  function dummyGetAPI(){
+    setDishes(dishes)
+  } 
+
+  useEffect(()=>{
+    dummyGetAPI()
+  }, [])
 
   function handleChange(event: any) {
     const { name, value } = event.target;
@@ -54,35 +77,47 @@ export default function Multiform() {
     setCurrentPage(currentPage + 1);
   }
 
+  function pageBuilder(input: any){
+    if(input.type === "text"){
+      return(
+        <input
+        type="text"
+        name={input.name}
+        value={inputValues[input.name] || ''}
+        onChange={handleChange}
+      />
+      )
+    }else if(input.type === "dropdown"){
+      return(
+        <select
+        name={input.name}
+        value={inputValues[input.name] || ''}
+        onChange={handleChange}
+      >
+        {input.options && input.options.map((option:any) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      )
+    }
+  }
+
   const currentInputs = formPages[currentPage].inputs;
+  const inputMap = currentInputs.map((input:any, i) => (
+    <div className={input.className} key={i}>
+      {pageBuilder(input)}
+
+    </div>
+  ))
 
   return (
     <form>
-      {currentInputs.map((input) => (
-        <div key={input.name}>
-          {input.type === 'text' && (
-            <input
-              type="text"
-              name={input.name}
-              value={inputValues[input.name] || ''}
-              onChange={handleChange}
-            />
-          )}
-          {input.type === 'dropdown' && (
-            <select
-              name={input.name}
-              value={inputValues[input.name] || ''}
-              onChange={handleChange}
-            >
-              {input.options && input.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      ))}
+      <div className="form">
+
+      {inputMap}
+      </div>
       {currentPage > 0 && <button onClick={handlePrev}>Previous</button>}
       {currentPage < formPages.length - 1 && (
         <button onClick={handleNext}>Next</button>
