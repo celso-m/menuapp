@@ -5,34 +5,61 @@ import dishes from '../dummydata/dishes.json'
 export default function Multiform() {
   const [currentPage, setCurrentPage] = useState(0);
   const [inputValues, setInputValues] = useState<{[key: string]: string}>({});
-  const [dishList, setDishes] = useState([{}])
+  const [dishList, setDishes] = useState([{
+      "id": 0,
+      "name": "",
+      "restaurant": "",
+      "availableMeals": [""]
+  }])
   const selectableRest = Array.from(new Set(dishList
-    .filter((item:any) => item.availableMeals == inputValues['meal'])
+    .filter((item:any) =>{
+      for(let meal of item.availableMeals){
+        if(meal === inputValues['meal']) return true
+      }
+      return false
+    })
     .map((item:any) => item.restaurant ))
   )
 
   console.log(inputValues)
-  console.log(selectableRest)
+  
+  let selectableDishes: any[] = Array.from(new Set(dishList
+      .filter((item:any) =>{
+        for(let meal of item.availableMeals){
+          if(meal === inputValues['meal'] && inputValues['selectedRest'] === item.restaurant) return true
+        }
+        return false
+      })
+      .map((item:any) => item.name ))
+    ) 
+  
+  
   const formPages = [
     {
       name: 'Page 1',
       inputs: [
-        { type: 'text', name: 'input1' },
         {
           type: 'dropdown',
           name: 'meal',
           options: ['breakfast', 'lunch', 'dinner'],
-          className: "mealDropDown"
+          placeholder: "breakfast",
+          // className: "mealDropDown"
+        },
+        { 
+          type: 'number', 
+          name: 'numOfPeople',
+          min: '1',
+          max: '10',
+          step: '1'
         },
       ],
     },
     {
       name: 'Page 2',
       inputs: [
-        { type: 'text', name: 'input2' },
         {
           type: 'dropdown',
-          name: 'dropdown2',
+          name: 'selectedRest',
           options: [...selectableRest],
         },
       ],
@@ -40,18 +67,16 @@ export default function Multiform() {
     {
       name: 'Page 3',
       inputs: [
-        { type: 'text', name: 'input3' },
         {
           type: 'dropdown',
-          name: 'dropdown3',
-          options: ['Option 5', 'Option 6'],
+          name: 'selectedDish',
+          options: [...selectableDishes],
         },
       ],
     },
     {
       name: 'Page 4',
       inputs: [
-        { type: 'text', name: 'input3' },
         {
           type: 'dropdown',
           name: 'dropdown3',
@@ -85,28 +110,32 @@ export default function Multiform() {
   }
 
   function pageBuilder(input: any){
-    if(input.type === "text"){
-      return(
-        <input
-        type="text"
-        name={input.name}
-        value={inputValues[input.name] || ''}
-        onChange={handleChange}
-      />
-      )
-    }else if(input.type === "dropdown"){
+    if(input.type === "dropdown"){
       return(
         <select
         name={input.name}
         value={inputValues[input.name] || ''}
         onChange={handleChange}
-      >
+        >
         {input.options && input.options.map((option:any) => (
           <option key={option} value={option}>
             {option}
           </option>
         ))}
       </select>
+      )
+    }else if(input.type === "number"){
+      return(
+      <input
+        type="number"
+        name={input.name}
+        value={inputValues[input.name] || '1'}
+        onChange={handleChange}
+        min= {input.min}
+        max= {input.max}
+        step= {input.step}
+      />
+        
       )
     }
   }
