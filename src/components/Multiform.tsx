@@ -98,22 +98,21 @@ export default function Multiform() {
     setInputValues({ ...inputValues, [name]: value });
   }
 
-  const addInputField = (event:any)=>{
+  function addInputField(event:any){
       event.preventDefault();
       setInputFields([...inputFields, {
           dish:'',
           servingNum:''
       } ])
-    
   }
 
-  const removeInputFields = (index:any)=>{
+  function removeInputFields(index:any){
       const rows = [...inputFields];
       rows.splice(index, 1);
       setInputFields(rows);
   }
 
-  const handleChangeDish = (index:any, evnt:any)=>{
+  function handleChangeDish(index:any, evnt:any){
       evnt.preventDefault();
       const { name, value } = evnt.target;
       const list:any = [...inputFields];
