@@ -15,11 +15,41 @@ code {
 .mealDropDown{
   display: flex;
   flex-direction: row;
-  padding: 40px;
 }
 
 .form{
   display: flex;
   flex-direction: column;
   padding: 40px;
+}
+
+ol,ul {
+	list-style: none;
+}
+#mainMenu{
+  display:flex;
+  flex-direction: row;
+}
+
+#mainMenu li {
+	width:120px;
+  display: inline;
+	margin-left:2px;
+	border:1px solid #000;
+  padding: 2px;
+}
+
+#mainMenu a:hover {
+	background-color:#009;
+	color:#fff;
+}
+
+.review{
+  width: 260px;
+}
+
+.row{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
