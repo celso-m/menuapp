@@ -10,9 +10,9 @@ export default function DishInput(props:any){
     const inputList =  inputFields.map((data:any, index:any)=>{
         const {dish, servingNum}= data;
         return(
-              <div key={index}>
-                    <div>
-                        <select
+              <div className="row" key={index}>
+                    <div >
+                        <select 
                             name="dish"
                             value={dish}
                             onChange={(evnt)=>handleChangeDish(index, evnt)}
@@ -50,14 +50,11 @@ export default function DishInput(props:any){
       })
 
     return(
-        <div>
-            {inputList}
+        <div className="dishes">
             <div>
-                <div>
-                    <button onClick={addInputField}>Add New</button>
-                </div>
+                {inputList}
+                <button className="row" onClick={addInputField}>Add New</button>
             </div>
         </div>
-
     )
 }

@@ -53,3 +53,9 @@ ol,ul {
   flex-direction: row;
   justify-content: space-between;
 }
+
+.dishes{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
